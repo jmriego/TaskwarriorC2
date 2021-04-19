@@ -17,6 +17,8 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
 
     <application
             android:name=".App"
@@ -43,7 +45,8 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:mimeType="*/*" android:scheme="file" android:pathPattern=".*\\.taskw\\.zip"/>
+                <data android:mimeType="*/*" android:scheme="file" android:pathPattern=".*\\.taskw\\.zip"
+                    tools:ignore="AppLinkUrlError" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -62,6 +65,15 @@
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".controller.tasker.ActivityConfigSyncAction"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="My Tasker Action">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
         </activity>
         <receiver
