@@ -144,6 +144,16 @@ public class AccountController {
         public void flush();
     }
 
+    public class CommandOutput {
+        public String stdout;
+        public String stderr;
+
+        public CommandOutput(String stdout, String stderr) {
+            this.stdout = stdout;
+            this.stderr = stderr;
+        }
+    }
+
     private class ToLogConsumer implements StreamConsumer {
 
         private final Logger.LoggerLevel level;
@@ -393,6 +403,13 @@ public class AccountController {
         return true;
     }
 
+    public CommandOutput taskRun(String... query) {
+        StringAggregator err = new StringAggregator();
+        StringAggregator out = new StringAggregator();
+        boolean result = callTask(out, err, query);
+        return new CommandOutput(out.text(), err.text() );
+    }
+
     public String taskSync() {
         if (!okSync()) {
             scheduleSync(TimerType.Periodical);
@@ -638,6 +655,7 @@ public class AccountController {
                 killThread.interrupt();
             }
 //            debug("All threads done");
+
             return exitCode;
         } catch (Exception e) {
             err.eat(e.getMessage());

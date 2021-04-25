@@ -27,6 +27,7 @@ import com.taskwc2.App;
 import com.taskwc2.MainActivity;
 import com.taskwc2.controller.data.AccountController;
 import com.taskwc2.controller.data.Controller;
+import com.taskwc2.controller.tasker.ActivityConfigTaskwarriorChangeEvent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -339,6 +340,7 @@ public class TwModule extends ReactContextBaseJavaModule implements AccountContr
                 System.arraycopy(out.array(), 0, result, 4, out.size());
                 System.arraycopy(err.array(), 0, result, 4+out.size(), err.size());
                 linesEater.invoke(result);
+                new ActivityConfigTaskwarriorChangeEvent().triggerEvent();
             }
         };
         task.exec();
