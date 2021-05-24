@@ -82,7 +82,15 @@
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".controller.tasker.ActivityConfigTaskwarriorChangeEvent"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="Background Work">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+            </intent-filter>
+        </activity>
         <receiver
             android:name=".controller.data.SyncIntentReceiver"
             android:enabled="true"

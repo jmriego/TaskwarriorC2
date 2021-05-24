@@ -1,5 +1,6 @@
 package com.taskwc2.react;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.content.FileProvider;
@@ -27,16 +28,19 @@ import com.taskwc2.App;
 import com.taskwc2.MainActivity;
 import com.taskwc2.controller.data.AccountController;
 import com.taskwc2.controller.data.Controller;
-import com.taskwc2.controller.tasker.ActivityConfigTaskwarriorChangeEvent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kvj.bravo7.log.Logger;
 import org.kvj.bravo7.util.Tasks;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import com.taskwc2.controller.tasker.ActivityConfigTaskwarriorChangeEvent;
 
 /**
  * Created by kvorobyev on 6/1/16.
@@ -295,6 +299,10 @@ public class TwModule extends ReactContextBaseJavaModule implements AccountContr
         }
     }
 
+    private boolean hasString(String[] strings, String searchString) {
+        return Arrays.asList(strings).contains(searchString);
+    }
+
     @ReactMethod
     public void call(ReadableArray args, ReadableMap config, final Callback linesEater) {
 //        logger.d("Call:", args, linesEater, acc);
@@ -332,6 +340,11 @@ public class TwModule extends ReactContextBaseJavaModule implements AccountContr
 
             @Override
             protected void onPostExecute(Integer code) {
+                if (hasString(arguments, "add") || hasString(arguments, "modify")) {
+                    Intent intent = new Intent(controller.context(), ActivityConfigTaskwarriorChangeEvent.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getCurrentActivity().startActivity(intent);
+                }
                 Object[] result = new Object[out.size()+err.size()+4];
                 result[0] = "success";
                 result[1] = code;
@@ -340,7 +353,6 @@ public class TwModule extends ReactContextBaseJavaModule implements AccountContr
                 System.arraycopy(out.array(), 0, result, 4, out.size());
                 System.arraycopy(err.array(), 0, result, 4+out.size(), err.size());
                 linesEater.invoke(result);
-                new ActivityConfigTaskwarriorChangeEvent().triggerEvent();
             }
         };
         task.exec();
