@@ -341,9 +341,7 @@ public class TwModule extends ReactContextBaseJavaModule implements AccountContr
             @Override
             protected void onPostExecute(Integer code) {
                 if (hasString(arguments, "add") || hasString(arguments, "modify")) {
-                    Intent intent = new Intent(controller.context(), ActivityConfigTaskwarriorChangeEvent.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getCurrentActivity().startActivity(intent);
+                    ActivityConfigTaskwarriorChangeEvent.requestQuery(controller.context())
                 }
                 Object[] result = new Object[out.size()+err.size()+4];
                 result[0] = "success";

@@ -25,46 +25,16 @@ import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResult
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultSucess
 
 
-class TaskwarriorChangeEventHelper(config: TaskerPluginConfig<Unit>) : TaskerPluginConfigHelperNoOutputOrInput<TaskwarriorChangeEventRunner>(config) {
-    override val runnerClass: Class<TaskwarriorChangeEventRunner> get() = TaskwarriorChangeEventRunner::class.java
+class TaskwarriorChangeEventHelper(config: TaskerPluginConfig<Unit>) : TaskerPluginConfigHelperNoOutputOrInput(config) {
     override fun addToStringBlurb(input: TaskerInput<Unit>, blurbBuilder: StringBuilder) {
         blurbBuilder.append("Will trigger this app's Tasker event")
     }
 }
 
-
-class TaskwarriorChangeEventRunner : TaskerPluginRunnerActionNoOutputOrInput() {
-    override fun run(context: Context, input: TaskerInput<Unit>): TaskerPluginResult<Unit> {
-//        if (!context.canDrawOverlays) throw RuntimeException("Have to be able to draw overlays to launch activities from background")
-        context.startActivity(Intent(context, ActivityBackgroundWork::class.java))
-        return TaskerPluginResultSucess()
-    }
-}
-
-
 class ActivityConfigTaskwarriorChangeEvent : Activity(), TaskerPluginConfigNoInput {
     override val context get() = applicationContext
-    private val taskerHelper by lazy { TaskwarriorChangeEventHelper(this) }
-    private val permissionRequestCode = 12
-    private fun finishForTasker() {
-        taskerHelper.finishForTasker()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        if (!Settings.canDrawOverlays(getApplicationContext()) )
-//        {
-//            "Enable \"Tasker Plugin Sample\" on this list".toToast(this)
-//            val uri = Uri.parse("package:$packageName")
-//            val intent = Intent(ACTION_MANAGE_OVERLAY_PERMISSION).setData(uri)
-//            startActivityForResult(intent, permissionRequestCode)
-//        }
-
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        finishForTasker()
+        TaskwarriorChangeEventHelper(this).finishForTasker()
     }
 }
