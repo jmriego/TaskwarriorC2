@@ -1,5 +1,6 @@
 package com.taskwc2.react;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.content.FileProvider;
@@ -33,9 +34,15 @@ import org.json.JSONObject;
 import org.kvj.bravo7.log.Logger;
 import org.kvj.bravo7.util.Tasks;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import com.taskwc2.controller.tasker.ActivityConfigTaskwarriorChangeEvent;
+import com.joaomgcd.taskerpluginlibrary.TaskerPluginConstants;
+import net.dinglisch.android.tasker.TaskerPlugin;
 
 /**
  * Created by kvorobyev on 6/1/16.
@@ -276,6 +283,14 @@ public class TwModule extends ReactContextBaseJavaModule implements AccountContr
         }.exec();
     }
 
+    public static void requestQuery(Context context) {
+        Intent requestQueryIntentForTasker = new Intent(TaskerPluginConstants.ACTION_REQUEST_QUERY)
+                .putExtra(TaskerPluginConstants.EXTRA_ACTIVITY,
+                        ActivityConfigTaskwarriorChangeEvent.class.getName());;
+        TaskerPlugin.Event.addPassThroughMessageID(requestQueryIntentForTasker);
+        context.sendBroadcast(requestQueryIntentForTasker);
+    }
+
     abstract class ArrayEater implements AccountController.StreamConsumer {
 
         final List<String> array = new ArrayList<>();
@@ -294,10 +309,15 @@ public class TwModule extends ReactContextBaseJavaModule implements AccountContr
         }
     }
 
+    private boolean hasString(String[] strings, String searchString) {
+        return Arrays.asList(strings).contains(searchString);
+    }
+
     @ReactMethod
     public void call(ReadableArray args, ReadableMap config, final Callback linesEater) {
 //        logger.d("Call:", args, linesEater, acc);
         final AccountController acc = accountController();
+        long mod = acc.lastModified();
         if (null == acc) { // Invalid
             linesEater.invoke("error", "Profile not configured");
             return;
@@ -331,6 +351,9 @@ public class TwModule extends ReactContextBaseJavaModule implements AccountContr
 
             @Override
             protected void onPostExecute(Integer code) {
+                if (acc.lastModified() > mod) {
+                    requestQuery(controller.context());
+                }
                 Object[] result = new Object[out.size()+err.size()+4];
                 result[0] = "success";
                 result[1] = code;

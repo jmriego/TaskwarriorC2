@@ -1,110 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.taskwc2"
-          android:versionCode="1"
-          android:versionName="1.0">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.taskwc2"
+    android:versionCode="1"
+    android:versionName="1.0">
 
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
-            android:name="android.permission.SYSTEM_ALERT_WINDOW"
-            tools:remove="${excludeSystemAlertWindowPermission}"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-
+        android:name="android.permission.SYSTEM_ALERT_WINDOW"
+        tools:remove="${excludeSystemAlertWindowPermission}" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
-            android:name=".App"
-            android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
+        android:name=".App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".AppActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme">
-        <activity
-                android:name=".AppActivity"
-                android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout">
-        </activity>
-        <activity
-                android:theme="@style/StartWindow"
-                android:name=".MainActivity"
-                android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
-                android:label="@string/app_name">
+            android:theme="@style/StartWindow">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter android:label="Restore backup">
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:mimeType="*/*" android:scheme="file" android:pathPattern=".*\\.taskw\\.zip"
+
+                <data
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.taskw\\.zip"
+                    android:scheme="file"
                     tools:ignore="AppLinkUrlError" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="tw+tasks" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.facebook.react.devsupport.DevSettingsActivity"
-            tools:remove="${excludeSystemAlertWindowPermission}"/>
+            tools:remove="${excludeSystemAlertWindowPermission}" />
         <activity
-                android:label="Create shortcut"
-                android:name=".ShortcutActivity"
-                android:theme="@style/Theme.AppCompat.Light.Dialog.Alert">
+            android:name=".ShortcutActivity"
+            android:label="Create shortcut"
+            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".controller.tasker.ActivityConfigSyncAction"
+            android:name=".controller.tasker.ActivityConfigTaskwarriorRun"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:label="My Tasker Action">
+            android:label="Run Taskwarrior command">
             <intent-filter>
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
         </activity>
-        <receiver
-                android:name=".controller.data.SyncIntentReceiver"
-                android:enabled="true"
-                android:exported="true">
+        <activity
+            android:name=".controller.tasker.ActivityConfigTaskwarriorChangeEvent"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="This event is triggered when Taskwarrior adds or modifies a task">
             <intent-filter>
-                <action android:name="taskw.SYNC"/>
+                <action android:name="net.dinglisch.android.tasker.ACTION_EDIT_EVENT" />
+            </intent-filter>
+        </activity>
+        <receiver
+            android:name=".controller.data.SyncIntentReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="taskw.SYNC" />
             </intent-filter>
         </receiver>
         <receiver android:name=".controller.data.BootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <receiver
-                android:name=".controller.data.NetworkChangeReceiver"
-                android:enabled="true"
-                android:exported="true">
+            android:name=".controller.data.NetworkChangeReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
         <provider
-                android:name="android.support.v4.content.FileProvider"
-                android:authorities="com.taskwc2"
-                android:exported="false"
-                android:grantUriPermissions="true">
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.taskwc2"
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
-                    android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/file_paths" />
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 

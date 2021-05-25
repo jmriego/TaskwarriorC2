@@ -106,6 +106,11 @@ public class AccountController {
         return new File(tasksFolder, DATA_FOLDER);
     }
 
+    public long lastModified() {
+        long mod = fileFromConfig("data/pending.data").lastModified();
+        return mod;
+    }
+
     public File folder() {
         return tasksFolder;
     }
@@ -142,6 +147,16 @@ public class AccountController {
         public void eat(String line);
 
         public void flush();
+    }
+
+    public class CommandOutput {
+        public String stdout;
+        public String stderr;
+
+        public CommandOutput(String stdout, String stderr) {
+            this.stdout = stdout;
+            this.stderr = stderr;
+        }
     }
 
     private class ToLogConsumer implements StreamConsumer {
@@ -391,6 +406,13 @@ public class AccountController {
             }
         }
         return true;
+    }
+
+    public CommandOutput taskRun(String... query) {
+        StringAggregator err = new StringAggregator();
+        StringAggregator out = new StringAggregator();
+        boolean result = callTask(out, err, query);
+        return new CommandOutput(out.text(), err.text() );
     }
 
     public String taskSync() {
